@@ -1,0 +1,74 @@
+*searchindex.txt*  Display current & total number of search matches
+
+Author:  Radoslaw Burny
+License: Same terms as Vim itself (see |license|)
+
+This plugin is only available if 'compatible' is not set.
+
+INTRODUCTION                                    *searchindex*
+
+This plugin helps you figure out how many times does a search pattern occur
+in the current buffer. After each search, it will display total number of
+matches, as well as the index of current match, in a command line.
+
+Consider the following example ("^" indicates cursor position): >
+  99 bottles of beer on the wall, ^ 99 bottles of beer.
+  Take one down and pass it around, 98 bottles of beer on the wall.
+<
+After searching for "beer", the statusline will display: >
+  [2/3]  /beer
+<
+SearchIndex works out of the box with all the usual search commands:
+   |/|   |?|   |q/|   |q?|   |n|   |N|   |star|   |#|   |gstar|   |g#|
+
+It caches the results, so stepping with |n| / |N| is fast even in huge files.
+
+MAPPINGS AND COMMANDS                           *searchindex-mappings*
+
+New mapping, *g/* is provided to display current search index on demand.
+If cursor is not on the match, number of matches before it is shown.
+*:SearchIndex* ex command and *<Plug>SearchIndex* (in normal mode) do the same.
+|g/| is not mapped if you map another key combination to |<Plug>SearchIndex|.
+
+Additionally, you can call *searchindex#MatchCounts()* to obtain number of
+search matches (as a 2-element array: [current, total]) in a script.
+
+STAR OVERRIDE                                   *searchindex-star*
+
+Vim has a family of "star" commands that search for a word under cursor
+(*, #, g* and g#). These commands are very useful, but they have a quirk -
+they ignore 'smartcase' setting. This makes it impossible to reliably
+calculate number of matches after "star" search.
+
+To work around this problem, SearchIndex reimplements "star" commands.
+As a bonus, it allows specifying case-sensitivity of "star" commands indepen-
+dently from other search commands (which are controlled by 'ignorecase').
+See |searchindex-options| for configuration options.
+
+OPTIONS                                         *searchindex-options*
+
+*g:searchindex_improved_star*     (default: 1)
+
+  Whether to override "star" commands. Disabling this may cause occasional
+  miscounting of search matches (especially with 'smartcase' enabled).
+
+*g:searchindex_star_case*         (default: 1)
+
+  Whether "star" search should be case-sensitive.
+
+*g:searchindex_line_limit*        (default: 1 million)
+
+  Maximum file size, in lines, on which SearchIndex will work. This can be
+  used to prevent slowing down search in huge files (although note that after
+  initial search is done, stepping with |n| / |N| is fast due to caching).
+
+KNOWN ISSUES                                    *searchindex-issues*
+
+Although I put a lot of effort into making SearchIndex robust, there are still
+some cases where matches are miscounted. This happens especially with regex
+searches (e.g. "a*" in line full of 'a's). It's mostly because Vim itself
+cannot decide how to count matches (for example, |:s| and |search()| may give
+inconsistent results). In any case, miscounting should be limited to the
+current line.
+
+ vim:tw=78:ft=help:norl:
