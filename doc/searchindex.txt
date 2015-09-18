@@ -1,18 +1,13 @@
 *searchindex.txt*  Display current & total number of search matches
 
-Author:  Radoslaw Burny
-License: Same terms as Vim itself (see |license|)
-
-This plugin is only available if 'compatible' is not set.
-
 INTRODUCTION                                    *searchindex*
 
 This plugin helps you figure out how many times does a search pattern occur
 in the current buffer. After each search, it will display total number of
-matches, as well as the index of current match, in a command line.
+matches, as well as the index of a current match, in a command line.
 
-Consider the following example ("^" indicates cursor position): >
-  99 bottles of beer on the wall, ^ 99 bottles of beer.
+Consider the following example ("|" indicates cursor position): >
+  99 bottles of beer on the wall, | 99 bottles of beer.
   Take one down and pass it around, 98 bottles of beer on the wall.
 <
 After searching for "beer", the statusline will display: >

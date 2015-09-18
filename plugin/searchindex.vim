@@ -1,5 +1,19 @@
 " searchindex.vim - display current & total number of search matches
-" Author: Radoslaw Burny
+" Author: Radoslaw Burny (rburny@google.com)
+"
+" Copyright 2015 Google Inc. All rights reserved.
+"
+" Licensed under the Apache License, Version 2.0 (the "License");
+" you may not use this file except in compliance with the License.
+" You may obtain a copy of the License at
+"
+"     http://www.apache.org/licenses/LICENSE-2.0
+"
+" Unless required by applicable law or agreed to in writing, software
+" distributed under the License is distributed on an "AS IS" BASIS,
+" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+" See the License for the specific language governing permissions and
+" limitations under the License.
 
 if exists('g:loaded_searchindex') || &cp || v:version < 700
   finish
@@ -35,19 +49,10 @@ nnoremap <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 nmap <silent>n  n<Plug>SearchIndex
 nmap <silent>N  N<Plug>SearchIndex
 
-if g:searchindex_improved_star
-  " reimplement star commands using '/' and '?'
-  map <expr> * <SID>StarSearch('/', 1)
-  map <expr> # <SID>StarSearch('?', 1)
-  map <expr> g* <SID>StarSearch('/', 0)
-  map <expr> g# <SID>StarSearch('?', 0)
-else
-  " show search index after commands, but don't change their behavior
-  nmap <silent>*  *<Plug>SearchIndex
-  nmap <silent>#  #<Plug>SearchIndex
-  nmap <silent>g* g*<Plug>SearchIndex
-  nmap <silent>g# g#<Plug>SearchIndex
-endif
+map <expr> *  <SID>StarSearch('*')
+map <expr> #  <SID>StarSearch('#')
+map <expr> g* <SID>StarSearch('g*')
+map <expr> g# <SID>StarSearch('g#')
 
 " Remap searches from '/' and 'g/' by plugging into <CR> in cmdline & cmdwin.
 cmap <silent> <expr> <CR> <SID>handle_cr()
@@ -69,15 +74,22 @@ augroup END
 
 " Implementation details.
 
-function! s:StarSearch(searchdir, use_delims)
+function! s:StarSearch(cmd)
+  if !g:searchindex_improved_star
+    " show search index after command, but don't change its behavior
+    return a:cmd . "\<Plug>SearchIndex"
+  endif
+
   " With no word under cursor, search will fail. Fall back to '*' so that
   " error seems to come from native Vim command, not from this function.
   if expand("<cword>") == "" | return "*" | endif
 
+  " reimplement star commands using '/' and '?'
+  let search_dir = (a:cmd == '*' || a:cmd == 'g*') ? '/' : '?'
   let case_char = (g:searchindex_star_case ? '\C' : '\c')
-  let [open_delim, close_delim] = (a:use_delims ? ['\<', '\>'] : ['', ''])
+  let [open_delim, close_delim] = (a:cmd =~ 'g.' ? ['', ''] : ['\<', '\>'])
   let search_term = open_delim . "\<C-R>\<C-W>" . close_delim
-  return a:searchdir . case_char . search_term . "\<CR>"
+  return search_dir . search_term . case_char . "\<CR>"
 endfunction
 
 function! s:MatchesInRange(range)
@@ -98,8 +110,9 @@ function! s:MatchInLine()
   normal 0
   let matches = 0
   let s_opt = 'c'
-  " The count might be off for regexes (e.g. 'a*'). Unfortunately, Vim's
-  " searching is so inconsistent that I can't fix this.
+  " The count might be off in edge cases (e.g. regexes that allow empty match,
+  " like 'a*'). Unfortunately, Vim's searching functions are so inconsistent
+  " that I can't fix this.
   while search(@/, s_opt, line) && col('.') <= col
     let matches += 1
     let s_opt = ''
