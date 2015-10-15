@@ -15,7 +15,12 @@
 " See the License for the specific language governing permissions and
 " limitations under the License.
 
-if exists('g:loaded_searchindex') || &cp || v:version < 700
+if &cp || v:version < 700
+  echoerr "Ancient Vim version, or compatible set"
+  finish
+endif
+
+if exists('g:loaded_searchindex')
   finish
 endif
 let g:loaded_searchindex = 1
@@ -153,14 +158,15 @@ endfunction
 function! s:PrintMatches()
   let dir_char = v:searchforward ? '/' : '?'
   if line('$') > g:searchindex_line_limit
-    echo '[MAX]  ' . dir_char . @/
-    return
+    let msg = '[MAX]  ' . dir_char . @/
+  else
+    " If there are no matches, search fails before we get here. The only way
+    " we could see zero results is on 'g/' (but that's a reasonable result).
+    let [current, total] = searchindex#MatchCounts()
+    let msg = '[' . current . '/' . total . ']  ' . dir_char . @/
   endif
 
-  let [current, total] = searchindex#MatchCounts()
-  if total != 0
-    echo '[' . current . '/' . total . ']  ' . dir_char . @/
-  endif
+  echo msg
 endfunction
 
 " Return 2-element array, containing current index and total number of matches
