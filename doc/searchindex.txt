@@ -10,7 +10,7 @@ Consider the following example ("|" indicates cursor position): >
   99 bottles of beer on the wall, | 99 bottles of beer.
   Take one down and pass it around, 98 bottles of beer on the wall.
 <
-After searching for "beer", the statusline will display: >
+After searching for "beer", the command line will display: >
   [2/3]  /beer
 <
 SearchIndex works out of the box with all the usual search commands:
