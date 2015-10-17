@@ -112,7 +112,7 @@ function! s:MatchInLine()
   let col = col('.')
   let star_search = 0
 
-  normal 0
+  normal! 0
   let matches = 0
   let s_opt = 'c'
   " The count might be off in edge cases (e.g. regexes that allow empty match,
@@ -167,6 +167,12 @@ function! s:PrintMatches()
   endif
 
   echo msg
+
+  " foldopen+=search causes search commands to open folds in the matched line
+  " - but it doesn't work in mappings. Hence, we just open the folds here.
+  if &foldopen =~# "search"
+    normal! zv
+  endif
 endfunction
 
 " Return 2-element array, containing current index and total number of matches
