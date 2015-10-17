@@ -4,7 +4,7 @@ This plugin shows how many times does a search pattern occur in the current
 buffer. After each search, it displays total number of matches, as well as the
 index of a current match, in the command line:
 
-<img src="https://raw.githubusercontent.com/google/vim-searchindex/master/vim-searchindex.png" width="90%">
+<img src="https://raw.githubusercontent.com/google/vim-searchindex/master/vim-searchindex.gif" width="90%">
 
 You can also press `g/` to display search index for the last search term at the
 current cursor position.
