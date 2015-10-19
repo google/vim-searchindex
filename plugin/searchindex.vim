@@ -180,6 +180,9 @@ endfunction
 function! searchindex#MatchCounts()
   " both :s and search() modify cursor position
   let win_view = winsaveview()
+  " folds affect range of ex commands (issue #4)
+  let save_foldenable = &foldenable
+  set nofoldenable
 
   let in_line = s:MatchInLine()
 
@@ -195,6 +198,7 @@ function! searchindex#MatchCounts()
   let b:searchindex_cache_val = [line('.'), before, total]
   let b:searchindex_cache_key = cache_key
 
+  let &foldenable = save_foldenable
   call winrestview(win_view)
 
   return [before + in_line, total]
