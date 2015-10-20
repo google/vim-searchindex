@@ -43,7 +43,8 @@ endif
 command! -bar SearchIndex call <SID>PrintMatches()
 
 if !hasmapto('<Plug>SearchIndex', 'n')
-  nmap <silent> g/ <Plug>SearchIndex
+  " If user has mapped 'g/', don't override it.
+  silent! nmap <silent> <unique> g/ <Plug>SearchIndex
 endif
 
 noremap  <Plug>SearchIndex <Nop>
@@ -59,7 +60,7 @@ map <expr> #  <SID>StarSearch('#')
 map <expr> g* <SID>StarSearch('g*')
 map <expr> g# <SID>StarSearch('g#')
 
-" Remap searches from '/' and 'g/' by plugging into <CR> in cmdline & cmdwin.
+" Remap searches from '/' and 'q/' by plugging into <CR> in cmdline & cmdwin.
 cmap <silent> <expr> <CR> <SID>handle_cr()
 function! s:handle_cr()
   if getcmdtype() =~ '[/?]'
