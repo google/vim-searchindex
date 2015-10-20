@@ -69,13 +69,17 @@ function! s:handle_cr()
   endif
 endfunction
 
-augroup searchindex_cmdwin
-  autocmd!
-  autocmd CmdWinEnter *
-    \ if getcmdwintype() =~ '[/?]' |
-    \   nmap <silent> <buffer> <CR> <CR><Plug>SearchIndex|
-    \ endif
-augroup END
+if exists('*getcmdwintype')
+  " getcmdwintype() requires Vim 7.4.392. If it's not available, disable
+  " support for command window searches (q/, q?).
+  augroup searchindex_cmdwin
+    autocmd!
+    autocmd CmdWinEnter *
+      \ if getcmdwintype() =~ '[/?]' |
+      \   nmap <silent> <buffer> <CR> <CR><Plug>SearchIndex|
+      \ endif
+  augroup END
+endif
 
 " Implementation details.
 
