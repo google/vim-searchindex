@@ -44,24 +44,24 @@ command! -bar SearchIndex call <SID>PrintMatches()
 
 if !hasmapto('<Plug>SearchIndex', 'n')
   " If user has mapped 'g/', don't override it.
-  silent! nmap <silent> <unique> g/ <Plug>SearchIndex
+  silent! nmap <unique> g/ <Plug>SearchIndex
 endif
 
 noremap  <Plug>SearchIndex <Nop>
 noremap! <Plug>SearchIndex <Nop>
-nnoremap <Plug>SearchIndex :call <SID>PrintMatches()<CR>
+nnoremap <silent> <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 
 " Remap search commands.
-nmap <silent>n  n<Plug>SearchIndex
-nmap <silent>N  N<Plug>SearchIndex
+nmap n  n<Plug>SearchIndex
+nmap N  N<Plug>SearchIndex
 
-map <expr> *  <SID>StarSearch('*')
-map <expr> #  <SID>StarSearch('#')
-map <expr> g* <SID>StarSearch('g*')
-map <expr> g# <SID>StarSearch('g#')
+map <silent> <expr> *  <SID>StarSearch('*')
+map <silent> <expr> #  <SID>StarSearch('#')
+map <silent> <expr> g* <SID>StarSearch('g*')
+map <silent> <expr> g# <SID>StarSearch('g#')
 
 " Remap searches from '/' and 'q/' by plugging into <CR> in cmdline & cmdwin.
-cmap <silent> <expr> <CR> <SID>handle_cr()
+cmap <expr> <CR> <SID>handle_cr()
 function! s:handle_cr()
   if getcmdtype() =~ '[/?]'
     return "\<CR>\<Plug>SearchIndex"
@@ -77,7 +77,7 @@ if exists('*getcmdwintype')
     autocmd!
     autocmd CmdWinEnter *
       \ if getcmdwintype() =~ '[/?]' |
-      \   nmap <silent> <buffer> <CR> <CR><Plug>SearchIndex|
+      \   nmap <buffer> <CR> <CR><Plug>SearchIndex|
       \ endif
   augroup END
 endif
