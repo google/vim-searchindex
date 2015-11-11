@@ -55,10 +55,15 @@ nnoremap <silent> <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 nmap n  n<Plug>SearchIndex
 nmap N  N<Plug>SearchIndex
 
-map <silent> <expr> *  <SID>StarSearch('*')
-map <silent> <expr> #  <SID>StarSearch('#')
-map <silent> <expr> g* <SID>StarSearch('g*')
-map <silent> <expr> g# <SID>StarSearch('g#')
+map  *  <Plug>ImprovedStar_*<Plug>SearchIndex
+map  #  <Plug>ImprovedStar_#<Plug>SearchIndex
+map  g* <Plug>ImprovedStar_g*<Plug>SearchIndex
+map  g# <Plug>ImprovedStar_g#<Plug>SearchIndex
+
+noremap <silent> <expr> <Plug>ImprovedStar_*  <SID>StarSearch('*')
+noremap <silent> <expr> <Plug>ImprovedStar_#  <SID>StarSearch('#')
+noremap <silent> <expr> <Plug>ImprovedStar_g* <SID>StarSearch('g*')
+noremap <silent> <expr> <Plug>ImprovedStar_g# <SID>StarSearch('g#')
 
 " Remap searches from '/' and 'q/' by plugging into <CR> in cmdline & cmdwin.
 cmap <expr> <CR> <SID>handle_cr()
@@ -85,10 +90,7 @@ endif
 " Implementation details.
 
 function! s:StarSearch(cmd)
-  if !g:searchindex_improved_star
-    " show search index after command, but don't change its behavior
-    return a:cmd . "\<Plug>SearchIndex"
-  endif
+  if !g:searchindex_improved_star | return a:cmd | endif
 
   " With no word under cursor, search will fail. Fall back to '*' so that
   " error seems to come from native Vim command, not from this function.
