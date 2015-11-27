@@ -52,8 +52,8 @@ noremap! <Plug>SearchIndex <Nop>
 nnoremap <silent> <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 
 " Remap search commands.
-nmap n  n<Plug>SearchIndex
-nmap N  N<Plug>SearchIndex
+nmap <silent> n n<Plug>SearchIndex
+nmap <silent> N N<Plug>SearchIndex
 
 map  *  <Plug>ImprovedStar_*<Plug>SearchIndex
 map  #  <Plug>ImprovedStar_#<Plug>SearchIndex
@@ -66,6 +66,8 @@ noremap <silent> <expr> <Plug>ImprovedStar_g* <SID>StarSearch('g*')
 noremap <silent> <expr> <Plug>ImprovedStar_g# <SID>StarSearch('g#')
 
 " Remap searches from '/' and 'q/' by plugging into <CR> in cmdline & cmdwin.
+" NOTE: This cannot use <silent> - it would break cmdline refresh in some
+" cases (e.g. multiline commands, <C-R>= usage).
 cmap <expr> <CR> <SID>handle_cr()
 function! s:handle_cr()
   if getcmdtype() =~ '[/?]'
