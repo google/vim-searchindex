@@ -167,14 +167,14 @@ function s:MatchesAbove(cached_values)
 endfunction
 
 function! s:PrintMatches()
-  let dir_char = v:searchforward ? '/' : '?'
+  let l:dir_char = v:searchforward ? '/' : '?'
   if line('$') > g:searchindex_line_limit
-    let msg = '[MAX]  ' . dir_char . @/
+    let l:msg = '[MAX]  ' . l:dir_char . @/
   else
     " If there are no matches, search fails before we get here. The only way
     " we could see zero results is on 'g/' (but that's a reasonable result).
-    let [current, total] = searchindex#MatchCounts()
-    let msg = '[' . current . '/' . total . ']  ' . dir_char . @/
+    let [l:current, l:total] = searchindex#MatchCounts()
+    let l:msg = '[' . l:current . '/' . l:total . ']  ' . l:dir_char . @/
   endif
 
   " foldopen+=search causes search commands to open folds in the matched line
@@ -183,9 +183,9 @@ function! s:PrintMatches()
     normal! zv
   endif
 
-  " Flush any delayed screen updates before printing "msg".
+  " Flush any delayed screen updates before printing "l:msg".
   " See ":h :echo-redraw".
-  redraw | echo msg
+  redraw | echo l:msg
 endfunction
 
 " Return 2-element array, containing current index and total number of matches
