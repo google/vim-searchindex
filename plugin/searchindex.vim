@@ -177,13 +177,15 @@ function! s:PrintMatches()
     let msg = '[' . current . '/' . total . ']  ' . dir_char . @/
   endif
 
-  echo msg
-
   " foldopen+=search causes search commands to open folds in the matched line
   " - but it doesn't work in mappings. Hence, we just open the folds here.
   if &foldopen =~# "search"
     normal! zv
   endif
+
+  " Flush any delayed screen updates before printing "msg".
+  " See ":h :echo-redraw".
+  redraw | echo msg
 endfunction
 
 " Return 2-element array, containing current index and total number of matches
