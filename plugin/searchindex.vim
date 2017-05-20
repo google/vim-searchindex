@@ -38,6 +38,8 @@ if !exists('g:searchindex_star_case')
   let g:searchindex_star_case=1
 endif
 
+set shortmess+=s
+
 " New command and mappings: show search index of last search pattern at
 " the current cursor position.
 command! -bar SearchIndex call <SID>PrintMatches()
