@@ -38,6 +38,7 @@ if !exists('g:searchindex_star_case')
   let g:searchindex_star_case=1
 endif
 
+" Suppress the "search hit BOTTOM, continuing at TOP" type messages.
 set shortmess+=s
 
 " New command and mappings: show search index of last search pattern at
