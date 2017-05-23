@@ -38,6 +38,9 @@ if !exists('g:searchindex_star_case')
   let g:searchindex_star_case=1
 endif
 
+" Suppress the "search hit BOTTOM, continuing at TOP" type messages.
+set shortmess+=s
+
 " New command and mappings: show search index of last search pattern at
 " the current cursor position.
 command! -bar SearchIndex call <SID>PrintMatches()
@@ -165,23 +168,25 @@ function s:MatchesAbove(cached_values)
 endfunction
 
 function! s:PrintMatches()
-  let dir_char = v:searchforward ? '/' : '?'
+  let l:dir_char = v:searchforward ? '/' : '?'
   if line('$') > g:searchindex_line_limit
-    let msg = '[MAX]  ' . dir_char . @/
+    let l:msg = '[MAX]  ' . l:dir_char . @/
   else
     " If there are no matches, search fails before we get here. The only way
     " we could see zero results is on 'g/' (but that's a reasonable result).
-    let [current, total] = searchindex#MatchCounts()
-    let msg = '[' . current . '/' . total . ']  ' . dir_char . @/
+    let [l:current, l:total] = searchindex#MatchCounts()
+    let l:msg = '[' . l:current . '/' . l:total . ']  ' . l:dir_char . @/
   endif
-
-  echo msg
 
   " foldopen+=search causes search commands to open folds in the matched line
   " - but it doesn't work in mappings. Hence, we just open the folds here.
   if &foldopen =~# "search"
     normal! zv
   endif
+
+  " Flush any delayed screen updates before printing "l:msg".
+  " See ":h :echo-redraw".
+  redraw | echo l:msg
 endfunction
 
 " Return 2-element array, containing current index and total number of matches
