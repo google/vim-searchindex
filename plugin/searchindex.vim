@@ -45,28 +45,26 @@ set shortmess+=s
 " the current cursor position.
 command! -bar SearchIndex call <SID>PrintMatches()
 
-if !hasmapto('<Plug>SearchIndex', 'n')
-  " If user has mapped 'g/', don't override it.
-  silent! nmap <unique> g/ <Plug>SearchIndex
-endif
+" If user has mapped 'g/', don't override it.
+silent! nmap <unique> g/ <Plug>SearchIndex
 
 noremap  <Plug>SearchIndex <Nop>
 noremap! <Plug>SearchIndex <Nop>
 nnoremap <silent> <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 
-" Remap search commands.
-nmap <silent> n n<Plug>SearchIndex
-nmap <silent> N N<Plug>SearchIndex
+" Remap search commands (only if they're not mapped by the user).
+silent! nmap <silent><unique> n n<Plug>SearchIndex
+silent! nmap <silent><unique> N N<Plug>SearchIndex
 
-map  *  <Plug>ImprovedStar_*<Plug>SearchIndex
-map  #  <Plug>ImprovedStar_#<Plug>SearchIndex
-map  g* <Plug>ImprovedStar_g*<Plug>SearchIndex
-map  g# <Plug>ImprovedStar_g#<Plug>SearchIndex
+silent! map <unique> *  <Plug>ImprovedStar_*<Plug>SearchIndex
+silent! map <unique> #  <Plug>ImprovedStar_#<Plug>SearchIndex
+silent! map <unique> g* <Plug>ImprovedStar_g*<Plug>SearchIndex
+silent! map <unique> g# <Plug>ImprovedStar_g#<Plug>SearchIndex
 
-noremap <silent> <expr> <Plug>ImprovedStar_*  <SID>StarSearch('*')
-noremap <silent> <expr> <Plug>ImprovedStar_#  <SID>StarSearch('#')
-noremap <silent> <expr> <Plug>ImprovedStar_g* <SID>StarSearch('g*')
-noremap <silent> <expr> <Plug>ImprovedStar_g# <SID>StarSearch('g#')
+noremap <silent><expr> <Plug>ImprovedStar_*  <SID>StarSearch('*')
+noremap <silent><expr> <Plug>ImprovedStar_#  <SID>StarSearch('#')
+noremap <silent><expr> <Plug>ImprovedStar_g* <SID>StarSearch('g*')
+noremap <silent><expr> <Plug>ImprovedStar_g# <SID>StarSearch('g#')
 
 " Remap searches from '/' and 'q/' by plugging into <CR> in cmdline & cmdwin.
 
@@ -75,7 +73,8 @@ noremap <silent> <expr> <Plug>ImprovedStar_g# <SID>StarSearch('g#')
 " NOTE: The mapping must be inlined - using a helper method breaks debug mode
 " (issue #14). Consider reimplementing it based on CmdlineEnter and
 " CmdlineLeave events to make it less intrusive.
-cmap <expr> <CR> "\<CR>" . (getcmdtype() =~ '[/?]' ? "<Plug>SearchIndex" : "")
+silent! cmap <unique><expr> <CR>
+    \ "\<CR>" . (getcmdtype() =~ '[/?]' ? "<Plug>SearchIndex" : "")
 
 if exists('*getcmdwintype')
   " getcmdwintype() requires Vim 7.4.392. If it's not available, disable
@@ -84,7 +83,7 @@ if exists('*getcmdwintype')
     autocmd!
     autocmd CmdWinEnter *
       \ if getcmdwintype() =~ '[/?]' |
-      \   nmap <buffer> <CR> <CR><Plug>SearchIndex|
+      \   silent! nmap <buffer><unique> <CR> <CR><Plug>SearchIndex|
       \ endif
   augroup END
 endif
