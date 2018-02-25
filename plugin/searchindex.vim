@@ -69,16 +69,13 @@ noremap <silent> <expr> <Plug>ImprovedStar_g* <SID>StarSearch('g*')
 noremap <silent> <expr> <Plug>ImprovedStar_g# <SID>StarSearch('g#')
 
 " Remap searches from '/' and 'q/' by plugging into <CR> in cmdline & cmdwin.
+
 " NOTE: This cannot use <silent> - it would break cmdline refresh in some
 " cases (e.g. multiline commands, <C-R>= usage).
-cmap <expr> <CR> <SID>handle_cr()
-function! s:handle_cr()
-  if getcmdtype() =~ '[/?]'
-    return "\<CR>\<Plug>SearchIndex"
-  else
-    return "\<CR>"
-  endif
-endfunction
+" NOTE: The mapping must be inlined - using a helper method breaks debug mode
+" (issue #14). Consider reimplementing it based on CmdlineEnter and
+" CmdlineLeave events to make it less intrusive.
+cmap <expr> <CR> "\<CR>" . (getcmdtype() =~ '[/?]' ? "<Plug>SearchIndex" : "")
 
 if exists('*getcmdwintype')
   " getcmdwintype() requires Vim 7.4.392. If it's not available, disable
