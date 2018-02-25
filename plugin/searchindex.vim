@@ -110,11 +110,16 @@ function! s:StarSearch(cmd)
 endfunction
 
 function! s:MatchesInRange(range)
+  " Use :s///n to search efficiently in large files. Although calling search()
+  " in the loop would be cleaner (see issue #18), it is also much slower.
   let gflag = &gdefault ? '' : 'g'
+  let saved_marks = [ getpos("'["), getpos("']") ]
   let output = ''
   redir => output
-    silent! execute a:range . 's///en' . gflag
+    silent! execute 'keepjumps ' . a:range . 's///en' . gflag
   redir END
+  call setpos("'[", saved_marks[0])
+  call setpos("']", saved_marks[1])
   return str2nr(matchstr(output, '\d\+'))
 endfunction
 
