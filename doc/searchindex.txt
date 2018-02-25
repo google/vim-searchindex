@@ -57,6 +57,12 @@ OPTIONS                                         *searchindex-options*
   used to prevent slowing down search in huge files (although note that after
   initial search is done, stepping with |n| / |N| is fast due to caching).
 
+*g:searchindex_next_key*          (default: "n")
+
+  SearchIndex will use this key to jump to the next match, and this key
+  uppercase to jump to the previous. On some layouts it is convenient to remap
+  several keys to make hjkl work, and you may want to remap |n| as well.
+
 KNOWN ISSUES                                    *searchindex-issues*
 
 Although I put a lot of effort into making SearchIndex robust, there are still

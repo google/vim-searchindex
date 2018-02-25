@@ -34,6 +34,10 @@ if !exists('g:searchindex_improved_star')
   let g:searchindex_improved_star=1
 endif
 
+if !exists('g:searchindex_next_key')
+    let g:searchindex_next_key='n'
+endif
+
 if !exists('g:searchindex_star_case')
   let g:searchindex_star_case=1
 endif
@@ -55,8 +59,10 @@ noremap! <Plug>SearchIndex <Nop>
 nnoremap <silent> <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 
 " Remap search commands.
-nmap <silent> n n<Plug>SearchIndex
-nmap <silent> N N<Plug>SearchIndex
+exec 'nmap <silent> ' . g:searchindex_next_key .
+\ ' :normal! n<CR><Plug>SearchIndex'
+exec 'nmap <silent> ' . toupper(g:searchindex_next_key) .
+\ ' :normal! N<CR><Plug>SearchIndex'
 
 map  *  <Plug>ImprovedStar_*<Plug>SearchIndex
 map  #  <Plug>ImprovedStar_#<Plug>SearchIndex
