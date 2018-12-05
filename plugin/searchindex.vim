@@ -112,7 +112,7 @@ function! s:MatchesInRange(range)
   let saved_marks = [ getpos("'["), getpos("']") ]
   let output = ''
   redir => output
-    silent! execute 'keepjumps ' . a:range . 's///en' . gflag
+    silent! execute 'keepjumps ' . a:range . 's//~/en' . gflag
   redir END
   call setpos("'[", saved_marks[0])
   call setpos("']", saved_marks[1])
