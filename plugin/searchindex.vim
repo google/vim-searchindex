@@ -38,6 +38,10 @@ if !exists('g:searchindex_star_case')
   let g:searchindex_star_case=1
 endif
 
+if !exists('g:searchindex_default_mappings')
+  let g:searchindex_default_mappings=0
+endif
+
 " Suppress the "search hit BOTTOM, continuing at TOP" type messages.
 set shortmess+=s
 
@@ -56,10 +60,12 @@ nnoremap <silent> <Plug>SearchIndex :call <SID>PrintMatches()<CR>
 silent! nmap <silent><unique> n n<Plug>SearchIndex
 silent! nmap <silent><unique> N N<Plug>SearchIndex
 
-silent! map <unique> *  <Plug>ImprovedStar_*<Plug>SearchIndex
-silent! map <unique> #  <Plug>ImprovedStar_#<Plug>SearchIndex
-silent! map <unique> g* <Plug>ImprovedStar_g*<Plug>SearchIndex
-silent! map <unique> g# <Plug>ImprovedStar_g#<Plug>SearchIndex
+if g:searchindex_default_mappings
+  silent! map <unique> *  <Plug>ImprovedStar_*<Plug>SearchIndex
+  silent! map <unique> #  <Plug>ImprovedStar_#<Plug>SearchIndex
+  silent! map <unique> g* <Plug>ImprovedStar_g*<Plug>SearchIndex
+  silent! map <unique> g# <Plug>ImprovedStar_g#<Plug>SearchIndex
+endif
 
 noremap <silent><expr> <Plug>ImprovedStar_*  <SID>StarSearch('*')
 noremap <silent><expr> <Plug>ImprovedStar_#  <SID>StarSearch('#')
