@@ -168,6 +168,29 @@ function s:MatchesAbove(cached_values)
   endif
 endfunction
 
+" Return the given string, shorten to the maximum length. The middle of the
+" string would be replace by '...' in case the original string is too long.
+function! s:ShortString(string, max_length)
+    " If the string is short enough, return it as it is.
+    if len(a:string) < a:max_length
+        return a:string
+    endif
+
+    " Calculate the needed length of each part of the string.
+    " The 3 is because the middle part would be replace with 3 points.
+    let l:string_part_length = (a:max_length - 3) / 2
+
+    " Get the parts of the output string.
+    let l:start = a:string[:l:string_part_length - 1]
+    let l:end = a:string[len(a:string) - l:string_part_length:]
+
+    " Create the output string.
+    let l:output_string = l:start . "..." . l:end
+
+    " Return the results.
+    return l:output_string
+endfunction
+
 function! s:PrintMatches()
   let l:dir_char = v:searchforward ? '/' : '?'
   if line('$') > g:searchindex_line_limit
@@ -183,6 +206,15 @@ function! s:PrintMatches()
   " - but it doesn't work in mappings. Hence, we just open the folds here.
   if &foldopen =~# "search"
     normal! zv
+  endif
+
+  " Shorten the message string, to make it one screen wide. Do it only if thee
+  " T flag is inside the shortmess variable.
+  " It seems that the press enter message won't be printed only if the length 
+  " of the message is shorter by at least 11 chars than the real length of the
+  " screen.
+  if match(&shortmess, 'T') != -1
+    let l:msg = s:ShortString(l:msg, &columns - 11)
   endif
 
   " Flush any delayed screen updates before printing "l:msg".
