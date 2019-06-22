@@ -1,8 +1,8 @@
 # vim-searchindex
 
-This plugin shows how many times does a search pattern occur in the current
-buffer. After each search, it displays total number of matches, as well as the
-index of a current match, in the command line:
+This plugin shows how many times a search pattern occurs in the current buffer.
+After each search, it displays total number of matches, as well as the index of
+a current match, in the command line:
 
 <img src="https://raw.githubusercontent.com/google/vim-searchindex/master/vim-searchindex.gif" width="90%">
 
