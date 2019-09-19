@@ -16,6 +16,9 @@ configuration options), see `:help searchindex`.
 
 ## Installation
 
+Note: This behavior is now supported natively in Vim 8.1.1270 and Neovim 0.4.0.
+Prefer updating your editor if possible instead of using this plugin.
+
 If you don't have a preferred installation method, I recommend
 installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
 then simply copy and paste:
